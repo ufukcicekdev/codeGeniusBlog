@@ -59,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_auto_logout.middleware.auto_logout'
 ]
 
 ROOT_URLCONF = 'blog_website.urls'
@@ -162,8 +163,8 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend"
 )
 
+AUTO_LOGOUT = {'IDLE_TIME': 21600}  # logout after 10 minutes of downtime
 
-SESSION_EXPIRE_SECONDS = 21600
 
 SESSION_TIMEOUT_REDIRECT = 'home'
 

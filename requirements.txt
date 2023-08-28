@@ -1,6 +1,7 @@
 amqp==5.1.1
 asgiref==3.7.2
 billiard==4.1.0
+bleach==6.0.0
 boto3==1.28.35
 botocore==1.31.35
 celery==5.3.1
@@ -9,6 +10,7 @@ click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.3.0
 Django==4.2.4
+django-auto-logout==0.5.1
 django-ckeditor==6.7.0
 django-js-asset==2.1.0
 django-storages==1.13.2
@@ -26,3 +28,4 @@ tzdata==2023.3
 urllib3==1.26.16
 vine==5.0.0
 wcwidth==0.2.6
+webencodings==0.5.1
