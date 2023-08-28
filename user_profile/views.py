@@ -225,3 +225,8 @@ def mute_or_unmute_user(request, user_id):
     return redirect('view_user_information', username=user.username)
 
 
+def custom_404_view(request, exception):
+    return render(request, 'errors/404.html', status=404)
+
+def custom_500_view(request):
+    return render(request, 'errors/500.html', status=500)
