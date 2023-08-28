@@ -131,10 +131,10 @@ def change_profile_picture(request):
                 user.profile_image = profile_image_url
                 user.save()
 
-                messages.success(request, "Profil resmi başarıyla güncellendi")
+                messages.success(request, "Profile has been updated sucessfully")
 
             except NoCredentialsError:
-                messages.error(request, "AWS kimlik bilgileri geçersiz veya eksik.")
+                messages.error(request, "Failed!.")
 
     return redirect('profile')
 
