@@ -20,6 +20,19 @@
                             <li class="py-2">
                                 <span>Following: <strong>{{account.user_follows.all.count}}</strong></span>
                             </li>
+                            {% if account.linkedIn_url %}
+                            <li class="py-2">
+
+                                <a href="{{ account.linkedIn_url }}" target="_blank"> <i class="fa fa-linkedin"></i></a>
+                            </li>
+                            {% endif %}
+
+                            {% if account.github_url %}
+                            <li class="py-2">
+                                <a href="{{ account.github_url }}" target="_blank"> <i class="fa fa-github"></i></a>
+                            </li>
+                            {% endif %}
+
                         </ul>
                     </div>
                     <div class="text-center pt-2 pb-1">
@@ -67,6 +80,8 @@
                 </div>
                 <div class="col-md-8">
                     <form class="px-4" action="{% url 'profile' %}" method="POST">
+                        {{form.media}}
+
                         {% csrf_token %}
                         {% if messages %}
                         <div class="form-group">
@@ -109,6 +124,49 @@
                         <div class="form-group">
                             <label for="confirm_password">Confirm Password</label>
                             <input class="form-control" name="confirm_password"  value="" type="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.linkedIn_url.id_for_label }}">LinkedIn URL</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        {% if form.linkedIn_url %}
+                                        <a href="{{ account.linkedIn_url }}" target="_blank"> <i class="fa fa-linkedin"></i></a>
+                                       
+                                        {% else %}
+                                        <a href="/"></a>
+                                        <i class="fa fa-linkedin"></i>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <input class="form-control" name="{{ form.linkedIn_url.name }}" value="{{ account.linkedIn_url }}" type="url">
+                            </div>
+                            <p class="text-danger error py-1">{{ form.linkedIn_url.errors }}</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.github_url.id_for_label }}">GitHub URL</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        {% if form.github_url %}
+                                        <a href="{{ account.github_url }}" target="_blank"> <i class="fa fa-github"></i></a>
+                                       
+                                        {% else %}
+                                        <a href="/"></a>
+                                        <i class="fa fa-github"></i>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <input class="form-control" name="{{ form.github_url.name }}" value="{{ account.github_url }}" type="url">
+                            </div>
+                            <p class="text-danger error py-1">{{ form.github_url.errors }}</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="title">Bio</label>
+                            {{form.bio|safe}}
+                            <p class="text-danger py-1">{{form.bio.errors}}</p>
                         </div>
                         <div class="form-group mt-2">
                             <button class="btn btn-primary">Update</button>

@@ -32,26 +32,48 @@
                                 <a class="btn btn-primary text-decoration-none" href="{% url 'follow_or_unfollow_user' account.id %}">Follow</a>
                                 {% endif %}
                             </li>
+                            {% if account.linkedIn_url %}
+                            <li class="py-2">
+
+                                <a href="{{ account.linkedIn_url }}" target="_blank"> <i class="fa fa-linkedin"></i></a>
+                            </li>
+                            {% endif %}
+
+                            {% if account.github_url %}
+                            <li class="py-2">
+                                <a href="{{ account.github_url }}" target="_blank"> <i class="fa fa-github"></i></a>
+                            </li>
+                            {% endif %}
                         </ul>
                     </div>
+                    
                 </div>
                 <div class="row pt-1 mb-2">
                     <div class="col-md-12 mb-2">
-                    <h4 class="text-monospace text-center">{{account.username}}'s blogs</h4>
+                        <h4 class="text-monospace text-center">{{ account.username }}'s blogs</h4>
                     </div>
                     <div class="col-md-12">
+                        {% if account.bio %}
+                        <div class="py-2">
+                            <p><strong>Bio:</strong></p>
+                            <p>{{ account.bio|striptags }}</p>
+                        </div>
+                        {% endif %}
                         <ul class="list-group list-group-flush">
                             {% for blog in account.user_blogs.all %}
                             <li class="list-group-item py-3">
                                 <a href="{% url 'blog_details' blog.slug %}">
-                                    <p>{{blog.title}}</p>
-                                    <p>{{blog.created_date}}</p>
+                                    <p>{{ blog.title }}</p>
+                                    <p>{{ blog.created_date }}</p>
                                 </a>
                             </li>
                             {% endfor %}
                         </ul>
                     </div>
                 </div>
+                
+                
+                
             </div>
         </div>
 </section>

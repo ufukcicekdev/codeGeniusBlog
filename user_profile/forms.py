@@ -1,5 +1,7 @@
 from django import forms
 from django.forms.forms import Form
+from ckeditor.fields import RichTextField
+from django.core.exceptions import ValidationError
 
 from .models import User
 
@@ -8,6 +10,8 @@ class LoginForm(forms.Form):
     username = forms.CharField(max_length=250, required=True)
     password = forms.CharField(max_length=250, required=True, widget=forms.PasswordInput)
     
+class TextForm(forms.Form):
+    text = forms.CharField(widget=forms.Textarea, required=True)
 
 
 class UserRegistrationForm(forms.ModelForm):
@@ -48,13 +52,32 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class UserProfileUpdateForm(forms.ModelForm):
+
     def _init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    bio = RichTextField()
+
+    def clean_linkedIn_url(self):
+        linkedin_url = self.cleaned_data.get('linkedIn_url')
+        
+        if linkedin_url and not linkedin_url.startswith('https://www.linkedin.com/'):
+            raise ValidationError("Please enter a valid LinkedIn URL.")
+        
+        return linkedin_url
+    
+    def clean_github_url(self):
+        github_url = self.cleaned_data.get('github_url')
+        
+        if github_url and not github_url.startswith('https://github.com/'):
+            raise ValidationError("Please enter a valid GitHub URL.")
+        
+        return github_url
 
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "email", )
+        fields = ("first_name", "last_name", "username", "email","linkedIn_url", "github_url","bio")
 
     def clean_username(self):
         username = self.cleaned_data.get('username')

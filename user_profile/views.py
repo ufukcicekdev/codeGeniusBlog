@@ -8,6 +8,7 @@ from botocore.exceptions import NoCredentialsError
 import os
 import uuid
 from dotenv import load_dotenv
+import bleach
 
 load_dotenv()
 
@@ -222,4 +223,5 @@ def mute_or_unmute_user(request, user_id):
         instance.save()
 
     return redirect('view_user_information', username=user.username)
+
 
