@@ -4,7 +4,9 @@
  */
 
 CKEDITOR.editorConfig = function( config ) {
-	// Define changes to default configuration here. For example:
-	// config.language = 'fr';
-	// config.uiColor = '#AADC6E';
+    // Diğer ayarlar
+    config.filebrowserBrowseUrl = '/ckeditor/browse/';
+    config.fillEmptyBlocks = false;
+    config.tabSpaces = 4;
+
 };

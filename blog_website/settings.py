@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["codegenius.blog"]
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'user_profile',
     'notification',
     'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -171,6 +172,10 @@ AUTO_LOGOUT = {'IDLE_TIME': 21600}  # logout after 10 minutes of downtime
 
 
 SESSION_TIMEOUT_REDIRECT = 'home'
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

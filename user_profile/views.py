@@ -112,11 +112,8 @@ def change_profile_picture(request):
                 return redirect('home')
 
             # AWS ayarları
-            random_uuid = uuid.uuid4()
-            uuid_str = str(random_uuid)
             bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
             img_path = os.getenv('AWS_STORAGE_PROFILE_IMG_PATH')
-            random_uuid = uuid.uuid4()
             # Dosyayı Spaces'e yükleme
             try:
                 s3 = boto3.client('s3',
@@ -124,10 +121,10 @@ def change_profile_picture(request):
                             region_name=os.getenv('AWS_S3_REGION_NAME'),
                             aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
                             aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-                s3.upload_fileobj(image, bucket_name, img_path +uuid_str+image.name, ExtraArgs={'ACL': 'public-read'})
+                s3.upload_fileobj(image, bucket_name, img_path+image.name, ExtraArgs={'ACL': 'public-read'})
 
                 # Profil resmi URL'si oluşturulması
-                profile_image_url = f"https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{uuid_str}{image.name}"
+                profile_image_url = f"https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{image.name}"
                 user.profile_image = profile_image_url
                 user.save()
 

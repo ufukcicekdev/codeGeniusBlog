@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 
 from .managers import CustomUserManager
 from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
+
 from storages.backends.s3boto3 import S3Boto3Storage
 
 class MediaStorage(S3Boto3Storage):
@@ -26,7 +28,7 @@ class User(AbstractUser):
     followers = models.ManyToManyField("Follow")
     linkedIn_url = models.URLField()
     github_url = models.URLField()
-    bio = RichTextField()
+    bio = RichTextUploadingField()
     REQUIRED_FIELDS = ["email"]
     objects = CustomUserManager()
 

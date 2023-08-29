@@ -242,8 +242,6 @@ def add_blog(request):
             blog.user = user
             blog.category = category
             image = request.FILES['banner']
-            random_uuid = uuid.uuid4()
-            uuid_str = str(random_uuid)
             bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
             img_path = os.getenv('AWS_STORAGE_BLOG_BANNERS_PATH')  # Kullanılan path'i güncelleyin
 
@@ -253,10 +251,10 @@ def add_blog(request):
                             region_name=os.getenv('AWS_S3_REGION_NAME'),
                             aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
                             aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-            s3.upload_fileobj(image, bucket_name, img_path + uuid_str + image.name, ExtraArgs={'ACL': 'public-read'})
+            s3.upload_fileobj(image, bucket_name, img_path + image.name, ExtraArgs={'ACL': 'public-read'})
 
             # Blog resmi URL'si oluşturulması
-            blog_image_url = f"https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{uuid_str}{image.name}"
+            blog_image_url = f"https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{image.name}"
             blog.banner = blog_image_url
             blog.save()
 
@@ -308,8 +306,6 @@ def update_blog(request, slug):
             blog.user = user
             blog.category = category
             image = request.FILES['banner']
-            random_uuid = uuid.uuid4()
-            uuid_str = str(random_uuid)
             bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
             img_path = os.getenv('AWS_STORAGE_BLOG_BANNERS_PATH')  # Kullanılan path'i güncelleyin
 
@@ -319,10 +315,10 @@ def update_blog(request, slug):
                             region_name=os.getenv('AWS_S3_REGION_NAME'),
                             aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
                             aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-            s3.upload_fileobj(image, bucket_name, img_path + uuid_str + image.name, ExtraArgs={'ACL': 'public-read'})
+            s3.upload_fileobj(image, bucket_name, img_path  + image.name, ExtraArgs={'ACL': 'public-read'})
 
             # Blog resmi URL'si oluşturulması
-            blog_image_url = f"https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{uuid_str}{image.name}"
+            blog_image_url = f"https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{image.name}"
             blog.banner = blog_image_url
             blog.save()
 
