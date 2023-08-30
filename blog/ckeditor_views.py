@@ -17,7 +17,6 @@ def ckeditor_upload(request):
         with open(temp_file_path, 'wb+') as temp_file:
             for chunk in uploaded_file.chunks():
                 temp_file.write(chunk)
-        
         # DigitalOcean Spaces kimlik doğrulama bilgileri
         bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
         img_path = os.getenv('AWS_STORAGE_BLOG_CKEEDITOR_PATH') 
@@ -45,7 +44,6 @@ def ckeditor_upload(request):
             'fileName': uploaded_file.name,
             'url': f'https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{uploaded_file.name}'
         }
-        print("response_data", response_data)
         return JsonResponse(response_data)
 
     return JsonResponse({'error': 'Invalid request'})

@@ -174,26 +174,30 @@ AUTO_LOGOUT = {'IDLE_TIME': 21600}  # logout after 10 minutes of downtime
 SESSION_TIMEOUT_REDIRECT = 'home'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_STORAGE_BACKEND = 'django.core.files.storage.FileSystemStorage'
 
 CKEDITOR_CONFIGS = {
    'default': {
-       'filebrowserBrowseUrl': '/ckeditor/browse/',
-       'toolbar_Full': [
+        'filebrowserUploadUrl': '/ckeditor/upload/',
+        'filebrowserBrowseUrl': '/ckeditor/browse/',
+        'toolbar': 'Full',  # Toolbar ayarları düzeltildi
+        'toolbar_Full': [
             ['Styles', 'Format', 'Bold', 'Italic', 'Underline', 'Strike', 'SpellChecker', 'Undo', 'Redo'],
             ['Link', 'Unlink', 'Anchor'],
             ['Image', 'Flash', 'Table', 'HorizontalRule'],
             ['TextColor', 'BGColor'],
             ['Smiley', 'SpecialChar'], ['Source'],
-            ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-            ['NumberedList','BulletedList'],
-            ['Indent','Outdent'],
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['NumberedList', 'BulletedList'],
+            ['Indent', 'Outdent'],
             ['Maximize'],
             {'name': 'about', 'items': ['CodeSnippet']},
             {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
         ],
         'tabSpaces': 4,
         'fillEmptyBlocks': False,
-        'extraPlugins': 'justify,liststyle,indent,codesnippet,devtools',
+        'extraPlugins': 'justify,liststyle,indent,codesnippet,devtools,uploadimage',  # Resim eklentisi eklendi
+        'uploadUrl': '/ckeditor/upload/',  # Resim yükleme URL'si eklendi
    },
 }
 
