@@ -13,7 +13,7 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="title">Blog Title</label>
-                        <input class="form-control" type="text" name="title">
+                        <input class="form-control" type="text" name="title" maxlength="250">
                         <p class="text-danger py-1">{{form.title.errors}}</p>
                     </div>
                     <div class="form-group">
