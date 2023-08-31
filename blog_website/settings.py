@@ -175,6 +175,7 @@ SESSION_TIMEOUT_REDIRECT = 'home'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_STORAGE_BACKEND = 'django.core.files.storage.FileSystemStorage'
+FILEBROWSER_REMOVE_DIALOG_TABS = 'image:Upload'
 
 CKEDITOR_CONFIGS = {
    'default': {
