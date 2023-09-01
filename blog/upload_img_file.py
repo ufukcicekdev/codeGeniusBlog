@@ -12,12 +12,8 @@ load_dotenv()
 def upload_blog_image(request,slug):
     if request.method == 'POST' and request.FILES.get('image'):
         f = request.FILES['image']
-        fs = FileSystemStorage()
-        cleaned_filename = str(f).strip()
-        filename, ext = cleaned_filename.split('.')
-        file = fs.save(str(f), f)
-        file_size = fs.size(file)
-        # Dosya yüklemesi başarılı olduysa, Spaces'e yükleyin
+
+        # Dosyayı Spaces'e veya S3'e yükleyin
         session = boto3.session.Session()
         s3_client = session.client(
             's3',
@@ -29,15 +25,16 @@ def upload_blog_image(request,slug):
 
         bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
         img_path = os.getenv('AWS_STORAGE_BLOG_CKEEDITOR_PATH')
+        cleaned_filename = str(f).strip()
+        filename, ext = cleaned_filename.split('.')
 
         try:
-            with open(fs.url(file).lstrip('/'), 'rb') as file_data:
-                s3_client.upload_fileobj(
-                    file_data,
-                    bucket_name,
-                    img_path + filename + '.' + ext,
-                    ExtraArgs={'ACL': 'public-read'}
-                )
+            s3_client.upload_fileobj(
+                f,
+                bucket_name,
+                img_path + filename + '.' + ext,
+                ExtraArgs={'ACL': 'public-read'}
+            )
         except Exception as e:
             return JsonResponse({'error': str(e)})
 
@@ -50,7 +47,7 @@ def upload_blog_image(request,slug):
             'file': {
                 'url': file_url,
                 'name': f.name,
-                'size': file_size,
+                'size': f.size,
             }
         }
         return JsonResponse(response_data)
@@ -58,16 +55,10 @@ def upload_blog_image(request,slug):
     return JsonResponse({'error': 'Invalid request'})
 @csrf_exempt
 def upload_blog_file(request,slug):
-    print("request",request)
     if request.method == 'POST' and request.FILES.get('file'):
         f = request.FILES['file']
-        fs = FileSystemStorage()
-        cleaned_filename = str(f).strip()
-        filename, ext = cleaned_filename.split('.')
-        file = fs.save(str(f), f)
-        file_size = fs.size(file)
-        print("burad")
-        # Dosya yüklemesi başarılı olduysa, Spaces'e yükleyin
+
+        # Dosyayı Spaces'e veya S3'e yükleyin
         session = boto3.session.Session()
         s3_client = session.client(
             's3',
@@ -79,15 +70,16 @@ def upload_blog_file(request,slug):
 
         bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
         img_path = os.getenv('AWS_STORAGE_BLOG_CKEEDITOR_PATH')
+        cleaned_filename = str(f).strip()
+        filename, ext = cleaned_filename.split('.')
 
         try:
-            with open(fs.url(file).lstrip('/'), 'rb') as file_data:
-                s3_client.upload_fileobj(
-                    file_data,
-                    bucket_name,
-                    img_path + filename + '.' + ext,
-                    ExtraArgs={'ACL': 'public-read'}
-                )
+            s3_client.upload_fileobj(
+                f,
+                bucket_name,
+                img_path + filename + '.' + ext,
+                ExtraArgs={'ACL': 'public-read'}
+            )
         except Exception as e:
             return JsonResponse({'error': str(e)})
 
@@ -100,7 +92,7 @@ def upload_blog_file(request,slug):
             'file': {
                 'url': file_url,
                 'name': f.name,
-                'size': file_size,
+                'size': f.size,
             }
         }
         return JsonResponse(response_data)
