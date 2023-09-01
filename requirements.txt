@@ -12,6 +12,7 @@ click-repl==0.3.0
 Django==4.2.4
 django-auto-logout==0.5.1
 django-ckeditor==6.7.0
+django-db-logger==0.1.12
 django-editorjs==0.2.1
 django-js-asset==2.1.0
 django-storages==1.13.2
