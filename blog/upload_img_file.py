@@ -1,9 +1,8 @@
 import os
 import boto3
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
-
+from django.views.decorators.csrf import ensure_csrf_cookie, requires_csrf_token, csrf_exempt
 from django_editorjs.fields import EditorJsField
 from dotenv import load_dotenv
 
@@ -57,7 +56,6 @@ def upload_blog_image(request,slug):
         return JsonResponse(response_data)
 
     return JsonResponse({'error': 'Invalid request'})
-
 @csrf_exempt
 def upload_blog_file(request,slug):
     print("request",request)

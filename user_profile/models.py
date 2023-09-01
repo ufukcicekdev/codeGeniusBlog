@@ -39,8 +39,8 @@ class User(AbstractUser):
                         "endpoints":{
                             "byFile":'uploadi/',
                             "byUrl":'uploadi/'
-                        },
-                       
+                        }
+
                     }
                 },
                 "Attaches":{

@@ -83,8 +83,7 @@ class Blog(models.Model):
                         "endpoints":{
                             "byFile":'uploadi/',
                             "byUrl":'uploadi/'
-                        },
-                       
+                        }
                     }
                 },
                 "Attaches":{

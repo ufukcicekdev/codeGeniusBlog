@@ -68,20 +68,20 @@ class UserProfileUpdateForm(forms.ModelForm):
                 "Image":{
                     "config":{
                         "endpoints":{
-                            "byFile":'/uploadi/',
-                            "byUrl":'/uploadi/'
-                        },
-                       
+                            "byFile":'uploadi/',
+                            "byUrl":'uploadi/'
+                        }
+
                     }
                 },
                 "Attaches":{
                     "config":{
-                        "endpoint":'/uploadf/'
+                        "endpoint":'uploadf/'
                     }
                 }
             }
         }
-    ) # Rich text alanı olarak tanımla
+    )# Rich text alanı olarak tanımla
 
     def clean_linkedIn_url(self):
         linkedin_url = self.cleaned_data.get('linkedIn_url')
