@@ -1,10 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
 from .managers import CustomUserManager
-from ckeditor.fields import RichTextField
-from ckeditor_uploader.fields import RichTextUploadingField
-
+from django_editorjs import EditorJsField
 from storages.backends.s3boto3 import S3Boto3Storage
 
 class MediaStorage(S3Boto3Storage):
@@ -28,7 +25,32 @@ class User(AbstractUser):
     followers = models.ManyToManyField("Follow")
     linkedIn_url = models.URLField()
     github_url = models.URLField()
-    bio = RichTextUploadingField()
+    bio = EditorJsField(
+        editorjs_config={
+            "tools":{
+                "Link":{
+                    "config":{
+                        "endpoint":
+                            '/linkfetching/'
+                        }
+                },
+                "Image":{
+                    "config":{
+                        "endpoints":{
+                            "byFile":'uploadi/',
+                            "byUrl":'uploadi/'
+                        },
+                       
+                    }
+                },
+                "Attaches":{
+                    "config":{
+                        "endpoint":'uploadf/'
+                    }
+                }
+            }
+        }
+    )
     REQUIRED_FIELDS = ["email"]
     objects = CustomUserManager()
 

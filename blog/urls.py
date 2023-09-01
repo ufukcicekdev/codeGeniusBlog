@@ -3,6 +3,7 @@ from django.contrib.sitemaps.views import sitemap
 from blog.sitemap import CategoryLinkSiteMap,TagsLinkSiteMap
 from django.conf.urls import handler404, handler500
 from django.views.generic import TemplateView
+from blog.upload_img_file import upload_blog_image,upload_blog_file
 from .views import *
 
 sitemaps = {
@@ -26,6 +27,8 @@ urlpatterns = [
     path('sitemap.xml/', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt',TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 
+    path('update_blog/<str:slug>/uploadi/', upload_blog_image, name='upload_blog_image'),
+    path('update_blog/<str:slug>/uploadf/', upload_blog_file, name='upload_blog_file'),
 ]
 handler404 = 'blog.views.custom_404_view'
 handler500 = 'blog.views.custom_500_view'

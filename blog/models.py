@@ -4,8 +4,7 @@ from django.utils.text import slugify
 from user_profile.models import User
 from .slugs import generate_unique_slug
 from storages.backends.s3boto3 import S3Boto3Storage
-from ckeditor.fields import RichTextField
-from ckeditor_uploader.fields import RichTextUploadingField
+from django_editorjs import EditorJsField
 
 
 
@@ -70,7 +69,32 @@ class Blog(models.Model):
     )
     slug = models.SlugField(null=True, blank=True)
     banner = models.ImageField(upload_to='blog_banners',storage=MediaStorage())
-    description = RichTextUploadingField()
+    description = EditorJsField(
+        editorjs_config={
+            "tools":{
+                "Link":{
+                    "config":{
+                        "endpoint":
+                            '/linkfetching/'
+                        }
+                },
+                "Image":{
+                    "config":{
+                        "endpoints":{
+                            "byFile":'uploadi/',
+                            "byUrl":'uploadi/'
+                        },
+                       
+                    }
+                },
+                "Attaches":{
+                    "config":{
+                        "endpoint":'uploadf/'
+                    }
+                }
+            }
+        }
+    )
     created_date = models.DateField(auto_now_add=True)
 
     def __str__(self) -> str:

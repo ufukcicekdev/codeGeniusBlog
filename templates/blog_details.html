@@ -28,7 +28,8 @@
                       <li><a href="javascript:void(0);">{{blog.created_date}}</a></li>
                       <li><a href="javascript:void(0);">{{blog.blog_comments.all.count}} Comments</a></li>
                     </ul>
-                    <p>{{blog.description|safe}}</p>
+                    
+                    <p id="post-body"></p>
                     <div class="post-options">
                       <div class="row">
                         <div class="col-6">
@@ -233,8 +234,143 @@
     padding: 0; /* İç boşluğu kaldırır */
 }
   </style>
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const postBody = document.getElementById("post-body");
+      let body = JSON.parse("{{blog_json|escapejs}}");
+      let blocks2 = body.content;
+      let body2 = JSON.parse(blocks2);
 
+      let blocks_contents = body2.blocks;
+
+      blocks_contents.forEach((block) => { // Döngü değişkeni "block" olarak değiştirildi
+        
+        switch (block.type) { // Döngü değişkeni "block" olarak değiştirildi
+          case "Header":
+            let head = document.createElement(`h${block.data.level}`);
+            head.textContent = block.data.text;
+            postBody.appendChild(head);
+            break;
   
+          case "Image":
+            let div = document.createElement("div");
+            let image = document.createElement("img");
+            let caption = document.createElement("small");
+            image.src = `${block.data.file.url}`;
+            image.style = "margin-top:10px;";
+            caption.textContent = block.data.caption;
+            caption.style = "margin-top:5px;";
+            div.appendChild(image);
+            div.appendChild(caption);
+            div.style = "display:grid;place-items:center";
+            image.classList.add("responsive-image");
+            postBody.appendChild(div);
+            break;
+  
+          case "List":
+            let list;
+            if (block.data.style == "unordered") {
+              list = document.createElement("ul");
+            } else {
+              list = document.createElement("ol");
+            }
+            for (const item in block.data.items) {
+              let li = document.createElement("li");
+              li.textContent = block.data.items[item];
+              list.appendChild(li);
+            }
+            postBody.appendChild(list);
+            break;
+  
+          case "Raw":
+            let blockquote = document.createElement("blockquote");
+            let code = document.createElement("code");
+            let pre = document.createElement("pre");
+            pre.textContent = block.data.html;
+            pre.style.background = "#131313";
+            pre.style.color = "#dddddd";
+            pre.style.padding = "15px";
+            code.appendChild(pre);
+            postBody.appendChild(code);
+            break;
+          
+          case "Attaches":
+            console.log("burada")
+            let parent = document.createElement("div");
+            parent.style =
+              "margin-top:10px;width:30%; padding:10px; border:1px solid black;border-radius:8px;";
+            let a = document.createElement("a");
+            let name = document.createElement("h4");
+            a.href = `${block.data.file.url}`;
+            a.textContent = `Download ${block.data.file.extension} (${
+              block.data.file.size / 1000
+            } kb)`;
+            a.style = "grid-column: 1 / span 2";
+            name.textContent = block.data.file.name;
+  
+            parent.appendChild(name);
+            parent.appendChild(a);
+  
+            postBody.appendChild(parent);
+            break;
+  
+          case "paragraph":
+            const p = document.createElement("p");
+            p.innerHTML = block.data.text;
+            postBody.appendChild(p);
+            break;
+  
+          case "Link":
+            let parent2 = document.createElement("div");
+            let a2 = document.createElement("a");
+            parent2.style =
+              " margin-top:10px; width:30%;display:grid; grid-template-columns: 1fr 50px; padding:10px; border:1px solid black;border-radius:8px;";
+  
+            if (block.data.meta.title) {
+              let title = document.createElement("p");
+              title.textContent = block.data.meta.title;
+              parent2.appendChild(title);
+            }
+            if (block.data.meta.image.url !== "") {
+              let parent3 = document.createElement("div");
+              let img = document.createElement("img");
+  
+              img.src = block.data.meta.image.url;
+              parent3.style = " display:grid;place-items:center";
+  
+              img.height = 40;
+              img.width = 40;
+              parent3.appendChild(img);
+              parent2.appendChild(parent3);
+            }
+  
+            if (block.data.meta.description) {
+              let desc = document.createElement("small");
+              desc.style = "grid-column: 1 / span 2";
+              desc.textContent = block.data.meta.description;
+              parent2.appendChild(desc);
+            }
+            a2.style = "text-decoration:none;color:black";
+            a2.href = block.data.link;
+            a2.appendChild(parent2);
+            postBody.appendChild(a2);
+            break;
+  
+          default:
+            break;
+        }
+      });
+    });
+</script>
+
+  <style>
+    .responsive-image {
+  max-width: 100%; /* İmajın maksimum genişliği */
+  height: auto; /* Yükseklik otomatik olarak ayarlanır, oran korunur */
+  display: block; /* Dikey hizalama */
+  margin: 0 auto; /* İmajı ortalamak için kullanılabilir */
+}
+  </style>
 
 {% endblock content %}
 

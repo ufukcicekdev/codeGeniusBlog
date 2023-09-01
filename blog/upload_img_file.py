@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 @csrf_exempt
-def editorjs_image_upload(request):
+def upload_blog_image(request,slug):
     if request.method == 'POST' and request.FILES.get('image'):
         f = request.FILES['image']
         fs = FileSystemStorage()
@@ -58,7 +58,7 @@ def editorjs_image_upload(request):
     return JsonResponse({'error': 'Invalid request'})
 
 @csrf_exempt
-def editorjs_file_upload(request):
+def upload_blog_file(request,slug):
     print("request",request)
     if request.method == 'POST' and request.FILES.get('file'):
         f = request.FILES['file']

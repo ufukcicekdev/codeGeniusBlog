@@ -49,8 +49,7 @@ INSTALLED_APPS = [
     'blog',
     'user_profile',
     'notification',
-    'ckeditor',
-    'ckeditor_uploader',
+    'django_editorjs'
 ]
 
 MIDDLEWARE = [
@@ -173,36 +172,36 @@ AUTO_LOGOUT = {'IDLE_TIME': 21600}  # logout after 10 minutes of downtime
 
 SESSION_TIMEOUT_REDIRECT = 'home'
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
+# CKEDITOR_UPLOAD_PATH = "uploads/"
 #CKEDITOR_STORAGE_BACKEND = 'django.core.files.storage.FileSystemStorage'
 #FILEBROWSER_REMOVE_DIALOG_TABS = 'image:Upload'
 # CKEDITOR_IMAGE_BACKEND = "pillow"
 # CKEDITOR_UPLOAD_SLUGIFY_FILENAME =False
 
-CKEDITOR_CONFIGS = {
-   'default': {
-        'filebrowserUploadUrl': '/ckeditor/upload/',
-        'filebrowserBrowseUrl': '/ckeditor/browse/',
-        'toolbar': 'Full',  # Toolbar ayarları düzeltildi
-        'toolbar_Full': [
-            ['Styles', 'Format', 'Bold', 'Italic', 'Underline', 'Strike', 'SpellChecker', 'Undo', 'Redo'],
-            ['Link', 'Unlink', 'Anchor'],
-            ['Image', 'Flash', 'Table', 'HorizontalRule'],
-            ['TextColor', 'BGColor'],
-            ['Smiley', 'SpecialChar'], ['Source'],
-            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['NumberedList', 'BulletedList'],
-            ['Indent', 'Outdent'],
-            ['Maximize'],
-            {'name': 'about', 'items': ['CodeSnippet']},
-            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
-        ],
-        'tabSpaces': 4,
-        'fillEmptyBlocks': False,
-        'extraPlugins': 'justify,liststyle,indent,codesnippet,devtools,uploadimage',  # Resim eklentisi eklendi
-        #'uploadUrl': '/ckeditor/upload/',  # Resim yükleme URL'si eklendi
-   },
-}
+# CKEDITOR_CONFIGS = {
+#    'default': {
+#         'filebrowserUploadUrl': '/ckeditor/upload/',
+#         'filebrowserBrowseUrl': '/ckeditor/browse/',
+#         'toolbar': 'Full',  # Toolbar ayarları düzeltildi
+#         'toolbar_Full': [
+#             ['Styles', 'Format', 'Bold', 'Italic', 'Underline', 'Strike', 'SpellChecker', 'Undo', 'Redo'],
+#             ['Link', 'Unlink', 'Anchor'],
+#             ['Image', 'Flash', 'Table', 'HorizontalRule'],
+#             ['TextColor', 'BGColor'],
+#             ['Smiley', 'SpecialChar'], ['Source'],
+#             ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+#             ['NumberedList', 'BulletedList'],
+#             ['Indent', 'Outdent'],
+#             ['Maximize'],
+#             {'name': 'about', 'items': ['CodeSnippet']},
+#             {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+#         ],
+#         'tabSpaces': 4,
+#         'fillEmptyBlocks': False,
+#         'extraPlugins': 'justify,liststyle,indent,codesnippet,devtools,uploadimage',  # Resim eklentisi eklendi
+#         #'uploadUrl': '/ckeditor/upload/',  # Resim yükleme URL'si eklendi
+#    },
+# }
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

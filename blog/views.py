@@ -12,6 +12,8 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 import os
 import uuid
+import json
+
 from dotenv import load_dotenv
 
 from user_profile.models import User
@@ -124,14 +126,24 @@ def blog_details(request, slug):
                 blog=blog,
                 text=form.cleaned_data.get('text')
             )
+       
             return redirect('blog_details', slug=slug)
+    blog_json = json.dumps({
+        "id": blog.id,
+        "title": blog.title,
+        "content": blog.description,
+        # Diğer blog verilerini ekleyebilirsiniz.
+    })
+
 
     context = {
         "blog": blog,
         "related_blogs": related_blogs,
         "tags": tags,
         "form": form,
-        "liked_by": liked_by
+        "liked_by": liked_by,
+        "blog_json": blog_json,
+
     }
     return render(request, 'blog_details.html', context)
 
