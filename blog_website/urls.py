@@ -17,11 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from blog_website.ckeditor_views import ckeditor_upload
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),
     path('', include('user_profile.urls')),
+    path('ckeditor/upload/',ckeditor_upload, name='ckeditor_upload'),
+    path('ckeditor/browse/', ckeditor_upload, name='ckeditor_browse')
 
 ]
 
