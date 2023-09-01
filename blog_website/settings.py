@@ -174,7 +174,7 @@ AUTO_LOGOUT = {'IDLE_TIME': 21600}  # logout after 10 minutes of downtime
 SESSION_TIMEOUT_REDIRECT = 'home'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
-CKEDITOR_STORAGE_BACKEND = 'django.core.files.storage.FileSystemStorage'
+#CKEDITOR_STORAGE_BACKEND = 'django.core.files.storage.FileSystemStorage'
 FILEBROWSER_REMOVE_DIALOG_TABS = 'image:Upload'
 
 CKEDITOR_CONFIGS = {
