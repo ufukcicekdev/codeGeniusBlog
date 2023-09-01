@@ -200,7 +200,7 @@ CKEDITOR_CONFIGS = {
         'tabSpaces': 4,
         'fillEmptyBlocks': False,
         'extraPlugins': 'justify,liststyle,indent,codesnippet,devtools,uploadimage',  # Resim eklentisi eklendi
-        'uploadUrl': '/ckeditor/upload/',  # Resim yükleme URL'si eklendi
+        #'uploadUrl': '/ckeditor/upload/',  # Resim yükleme URL'si eklendi
    },
 }
 
