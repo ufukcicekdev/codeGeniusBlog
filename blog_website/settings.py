@@ -173,6 +173,7 @@ AUTO_LOGOUT = {'IDLE_TIME': 21600}  # logout after 10 minutes of downtime
 SESSION_TIMEOUT_REDIRECT = 'home'
 
 EDITORJS_EMBED_HOSTNAME_ALLOWED =("codegenius.blog","www.codegenius.blog")
+EDITORJS_IMAGE_NAME_ORIGINAL = False
 
 # CKEDITOR_UPLOAD_PATH = "uploads/"
 #CKEDITOR_STORAGE_BACKEND = 'django.core.files.storage.FileSystemStorage'
