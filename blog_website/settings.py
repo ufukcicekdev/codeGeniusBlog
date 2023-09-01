@@ -32,10 +32,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["codegenius.blog"]
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = ["https://*.codegenius.blog"]
 # Application definition
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
