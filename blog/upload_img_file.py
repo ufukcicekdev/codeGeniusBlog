@@ -14,7 +14,8 @@ def upload_blog_image(request,slug):
     if request.method == 'POST' and request.FILES.get('image'):
         f = request.FILES['image']
         fs = FileSystemStorage()
-        filename, ext = str(f).split('.')
+        cleaned_filename = str(f).strip()
+        filename, ext = cleaned_filename.split('.')
         file = fs.save(str(f), f)
         file_size = fs.size(file)
         # Dosya yüklemesi başarılı olduysa, Spaces'e yükleyin
@@ -63,7 +64,8 @@ def upload_blog_file(request,slug):
     if request.method == 'POST' and request.FILES.get('file'):
         f = request.FILES['file']
         fs = FileSystemStorage()
-        filename, ext = str(f).split('.')
+        cleaned_filename = str(f).strip()
+        filename, ext = cleaned_filename.split('.')
         file = fs.save(str(f), f)
         file_size = fs.size(file)
         print("burad")
