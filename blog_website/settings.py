@@ -177,6 +177,7 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 #CKEDITOR_STORAGE_BACKEND = 'django.core.files.storage.FileSystemStorage'
 #FILEBROWSER_REMOVE_DIALOG_TABS = 'image:Upload'
 CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_UPLOAD_SLUGIFY_FILENAME =False
 
 CKEDITOR_CONFIGS = {
    'default': {
