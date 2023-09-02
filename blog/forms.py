@@ -20,14 +20,14 @@ class AddBlogForm(forms.ModelForm):
                 "Image":{
                     "config":{
                         "endpoints":{
-                            "byFile":'uploadi/',
+                            "byFile":'add_blog/uploadi/',
                             #"byUrl":'uploadi/'
                         }
                     }
                 },
                 "Attaches":{
                     "config":{
-                        "endpoint":'uploadf/'
+                        "endpoint":'add_blog/uploadf/'
                     }
                 }
             }
