@@ -21,7 +21,7 @@ class AddBlogForm(forms.ModelForm):
                     "config":{
                         "endpoints":{
                             "byFile":'uploadi/',
-                            "byUrl":'uploadi/'
+                            #"byUrl":'uploadi/'
                         }
                     }
                 },

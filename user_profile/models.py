@@ -38,7 +38,7 @@ class User(AbstractUser):
                     "config":{
                         "endpoints":{
                             "byFile":'uploadi/',
-                            "byUrl":'uploadi/'
+                            #"byUrl":'uploadi/'
                         }
 
                     }
