@@ -45,7 +45,7 @@ DEBUG = True
 
 ###Canlı Ortam 
 
-ALLOWED_HOSTS = ["codegenius.blog"]
+ALLOWED_HOSTS = ["codegenius.blog","*"]
 CSRF_TRUSTED_ORIGINS = ["https://*.codegenius.blog"]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
