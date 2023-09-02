@@ -32,7 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["codegenius.blog"]
 
-CSRF_TRUSTED_ORIGINS = ["https://*.codegenius.log"]
+CSRF_TRUSTED_ORIGINS = ["https://*.codegenius.blog"]
 # Application definition
 
 SECURE_SSL_REDIRECT = True
