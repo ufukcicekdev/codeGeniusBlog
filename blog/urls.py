@@ -4,6 +4,8 @@ from blog.sitemap import CategoryLinkSiteMap,TagsLinkSiteMap
 from django.conf.urls import handler404, handler500
 from django.views.generic import TemplateView
 from blog.upload_img_file import upload_blog_image,upload_blog_file
+from blog_website.ckeditor_views import editorjs_file_upload,editorjs_image_upload
+
 from .views import *
 
 sitemaps = {
@@ -29,6 +31,8 @@ urlpatterns = [
 
     path('update_blog/<str:slug>/uploadi/', upload_blog_image, name='upload_blog_image'),
     path('update_blog/<str:slug>/uploadf/', upload_blog_file, name='upload_blog_file'),
+    path('add_blog/uploadi/',   editorjs_image_upload, name='editorjs_image_upload'),
+    path('add_blog/uploadf/',   editorjs_file_upload, name='editorjs_file_upload'),
 ]
 handler404 = 'blog.views.custom_404_view'
 handler500 = 'blog.views.custom_500_view'
