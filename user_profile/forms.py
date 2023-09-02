@@ -68,7 +68,7 @@ class UserProfileUpdateForm(forms.ModelForm):
                 "Image":{
                     "config":{
                         "endpoints":{
-                            "byFile":'uploadi/',
+                            "byFile":'/uploadi/',
                             #"byUrl":'uploadi/'
                         }
 
@@ -76,7 +76,7 @@ class UserProfileUpdateForm(forms.ModelForm):
                 },
                 "Attaches":{
                     "config":{
-                        "endpoint":'uploadf/'
+                        "endpoint":'/uploadf/'
                     }
                 }
             }

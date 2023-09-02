@@ -37,7 +37,7 @@ class User(AbstractUser):
                 "Image":{
                     "config":{
                         "endpoints":{
-                            "byFile":'uploadi/',
+                            "byFile":'/uploadi/',
                             #"byUrl":'uploadi/'
                         }
 
@@ -45,7 +45,7 @@ class User(AbstractUser):
                 },
                 "Attaches":{
                     "config":{
-                        "endpoint":'uploadf/'
+                        "endpoint":'/uploadf/'
                     }
                 }
             }
