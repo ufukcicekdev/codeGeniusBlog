@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from django.urls import reverse_lazy
 import os
 from dotenv import load_dotenv
 
@@ -235,6 +236,54 @@ EDITORJS_VIDEO_BACKEND = 'storages.backends.s3boto3.S3Boto3Storage'  # VideolarÄ
 #    },
 # }
 
+
+
+EDITORJS_DEFAULT_CONFIG_TOOLS = {
+    'Image': {
+        'class': 'ImageTool',
+        'inlineToolbar': True,
+        "config": {
+            "endpoints": {
+                "byFile": reverse_lazy('uploadi'),
+                "byUrl": reverse_lazy('uploadi'),
+                'fileTypes': ['jpeg', 'jpg', 'png'],
+            }
+        },
+    },
+    'Header': {
+        'class': 'Header',
+        'inlineToolbar': True,
+        'config': {
+            'placeholder': 'Enter a header',
+            'levels': [2, 3, 4],
+            'defaultLevel': 2,
+        }
+    },
+    'Attachment': {
+    'class': 'AttachmentTool',
+    'config': {
+        'endpoint': reverse_lazy('uploadf'),
+        'fileTypes': ['pdf', 'doc', 'docx'],
+    }
+    },
+    'Checklist': {'class': 'Checklist', 'inlineToolbar': True},
+    'List': {'class': 'List', 'inlineToolbar': True},
+    'Quote': {'class': 'Quote', 'inlineToolbar': True},
+    'Raw': {'class': 'RawTool'},
+    'Code': {'class': 'CodeTool'},
+    'InlineCode': {'class': 'InlineCode'},
+    'Embed': {'class': 'Embed'},
+    'Delimiter': {'class': 'Delimiter'},
+    'Warning': {'class': 'Warning', 'inlineToolbar': True},
+    'LinkTool': {
+        'class': 'LinkTool',
+        'config': {
+            'endpoint': reverse_lazy('editorjs_linktool'),
+        }
+    },
+    'Marker': {'class': 'Marker', 'inlineToolbar': True},
+    'Table': {'class': 'Table', 'inlineToolbar': True},
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

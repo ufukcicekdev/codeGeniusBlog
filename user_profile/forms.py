@@ -56,32 +56,7 @@ class UserProfileUpdateForm(forms.ModelForm):
     def _init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    bio = EditorJsField(
-        editorjs_config={
-            "tools":{
-                "Link":{
-                    "config":{
-                        "endpoint":
-                            '/linkfetching/'
-                        }
-                },
-                "Image":{
-                    "config":{
-                        "endpoints":{
-                            "byFile":'uploadi/',
-                            #"byUrl":'uploadi/'
-                        }
-
-                    }
-                },
-                "Attaches":{
-                    "config":{
-                        "endpoint":'/uploadf/'
-                    }
-                }
-            }
-        }
-    )# Rich text alanı olarak tanımla
+    bio = EditorJsField()
 
     def clean_linkedIn_url(self):
         linkedin_url = self.cleaned_data.get('linkedIn_url')

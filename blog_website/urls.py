@@ -17,17 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from blog_website.ckeditor_views import editorjs_file_upload,editorjs_image_upload
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),
     path('', include('user_profile.urls')),
-    path('add_blog/uploadi/',   editorjs_image_upload, name='editorjs_image_upload'),
-    path('add_blog/uploadf/',   editorjs_file_upload, name='editorjs_file_upload'),
-    path('profile/uploadi/',    editorjs_image_upload, name='editorjs_image_upload'),
-    path('profile/uploadf/',    editorjs_file_upload, name='editorjs_file_upload'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
