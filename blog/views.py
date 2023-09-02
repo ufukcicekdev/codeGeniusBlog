@@ -13,7 +13,7 @@ from botocore.exceptions import NoCredentialsError
 import os
 import uuid
 import json
-
+import logging
 from dotenv import load_dotenv
 
 from user_profile.models import User
@@ -30,14 +30,21 @@ from .forms import TextForm, AddBlogForm
 load_dotenv()
 
 
+db_logger = logging.getLogger('db')
+
+
+
 def home(request):
-    blogs = Blog.objects.order_by('-created_date')
-    tags = Tag.objects.order_by('-created_date')
-    context = {
-        "blogs": blogs,
-        "tags": tags
-    }
-    return render(request, 'home.html', context)
+    try:
+        blogs = Blog.objects.order_by('-createddate')
+        tags = Tag.objects.order_by('-created_date')
+        context = {
+            "blogs": blogs,
+            "tags": tags
+        }
+        return render(request, 'home.html', context)
+    except Exception as e:
+        db_logger.exception(e)
 
 
 def blogs(request):
@@ -48,9 +55,11 @@ def blogs(request):
     
     try:
         blogs = paginator.page(page)
-    except EmptyPage:
+    except EmptyPage as e:
+        db_logger.exception(e)
         blogs = paginator.page(1)
-    except PageNotAnInteger:
+    except PageNotAnInteger as e:
+        db_logger.exception(e)
         blogs = paginator.page(1)
         return redirect('blogs')
     
@@ -72,9 +81,11 @@ def category_blogs(request, slug):
     
     try:
         blogs = paginator.page(page)
-    except EmptyPage:
+    except EmptyPage as e:
+        db_logger.exception(e)
         blogs = paginator.page(1)
-    except PageNotAnInteger:
+    except PageNotAnInteger as e:
+        db_logger.exception(e)
         blogs = paginator.page(1)
         return redirect('blogs')
 
@@ -96,9 +107,11 @@ def tag_blogs(request, slug):
     
     try:
         blogs = paginator.page(page)
-    except EmptyPage:
+    except EmptyPage as e:
+        db_logger.exception(e)
         blogs = paginator.page(1)
-    except PageNotAnInteger:
+    except PageNotAnInteger as e:
+        db_logger.exception(e)
         blogs = paginator.page(1)
         return redirect('blogs')
 
@@ -111,259 +124,280 @@ def tag_blogs(request, slug):
 
 
 def blog_details(request, slug):
-    form = TextForm()
-    blog = get_object_or_404(Blog, slug=slug)
-    category = Category.objects.get(id=blog.category.id)
-    related_blogs = category.category_blogs.all()
-    tags = Tag.objects.order_by('-created_date')[:5]
-    liked_by = request.user in blog.likes.all()
+    try:
+        form = TextForm()
+        blog = get_object_or_404(Blog, slug=slug)
+        category = Category.objects.get(id=blog.category.id)
+        related_blogs = category.category_blogs.all()
+        tags = Tag.objects.order_by('-created_date')[:5]
+        liked_by = request.user in blog.likes.all()
 
-    if request.method == "POST" and request.user.is_authenticated:
-        form = TextForm(request.POST)
-        if form.is_valid():
-            Comment.objects.create(
-                user=request.user,
-                blog=blog,
-                text=form.cleaned_data.get('text')
-            )
-       
-            return redirect('blog_details', slug=slug)
-    blog_json = json.dumps({
-        "id": blog.id,
-        "title": blog.title,
-        "content": blog.description,
-        # Diğer blog verilerini ekleyebilirsiniz.
-    })
+        if request.method == "POST" and request.user.is_authenticated:
+            form = TextForm(request.POST)
+            if form.is_valid():
+                Comment.objects.create(
+                    user=request.user,
+                    blog=blog,
+                    text=form.cleaned_data.get('text')
+                )
+        
+                return redirect('blog_details', slug=slug)
+        blog_json = json.dumps({
+            "id": blog.id,
+            "title": blog.title,
+            "content": blog.description,
+            # Diğer blog verilerini ekleyebilirsiniz.
+        })
 
 
-    context = {
-        "blog": blog,
-        "related_blogs": related_blogs,
-        "tags": tags,
-        "form": form,
-        "liked_by": liked_by,
-        "blog_json": blog_json,
+        context = {
+            "blog": blog,
+            "related_blogs": related_blogs,
+            "tags": tags,
+            "form": form,
+            "liked_by": liked_by,
+            "blog_json": blog_json,
 
-    }
-    return render(request, 'blog_details.html', context)
-
+        }
+        return render(request, 'blog_details.html', context)
+    except Exception as e:
+        db_logger.exception(e)
+        
 
 @login_required(login_url='login')
 def add_reply(request, blog_id, comment_id):
-    blog = get_object_or_404(Blog, id=blog_id)
-    if request.method == "POST":
-        form = TextForm(request.POST)
-        if form.is_valid():
-            comment = get_object_or_404(Comment, id=comment_id)
-            Reply.objects.create(
-                user=request.user,
-                comment=comment,
-                text=form.cleaned_data.get('text')
-            )
-    return redirect('blog_details', slug=blog.slug)
+    try:
+        blog = get_object_or_404(Blog, id=blog_id)
+        if request.method == "POST":
+            form = TextForm(request.POST)
+            if form.is_valid():
+                comment = get_object_or_404(Comment, id=comment_id)
+                Reply.objects.create(
+                    user=request.user,
+                    comment=comment,
+                    text=form.cleaned_data.get('text')
+                )
+        return redirect('blog_details', slug=blog.slug)
+    except Exception as e:
+        db_logger.exception(e)
+    
 
 
 @login_required(login_url='login')
 def like_blog(request, pk):
     context = {}
-    blog = get_object_or_404(Blog, pk=pk)
-    
-    if request.user in blog.likes.all():
-        blog.likes.remove(request.user)
-        context['liked'] = False
-        context['like_count'] = blog.likes.all().count()
+    try:
+        blog = get_object_or_404(Blog, pk=pk)
         
-    else:
-        blog.likes.add(request.user)
-        context['liked'] = True
-        context['like_count'] = blog.likes.all().count()
+        if request.user in blog.likes.all():
+            blog.likes.remove(request.user)
+            context['liked'] = False
+            context['like_count'] = blog.likes.all().count()
+            
+        else:
+            blog.likes.add(request.user)
+            context['liked'] = True
+            context['like_count'] = blog.likes.all().count()
 
-    return JsonResponse(context, safe=False)
+        return JsonResponse(context, safe=False)
+    except Exception as e:
+        db_logger.exception(e)
 
 
 def search_blogs(request):
-    search_key = request.GET.get('search', None)
-    recent_blogs = Blog.objects.order_by('-created_date')
-    tags = Tag.objects.order_by('-created_date')
-    
-    if search_key:
-        blogs = Blog.objects.filter(
-            Q(title__icontains=search_key) |
-            Q(category__title__icontains=search_key) |
-            Q(user__username__icontains=search_key) |
-            Q(tags__title__icontains=search_key)
-        ).distinct()
+    try:
 
-        context = {
-            "blogs": blogs,
-            "recent_blogs": recent_blogs,
-            "tags": tags,
-            "search_key": search_key
-        }
+        search_key = request.GET.get('search', None)
+        recent_blogs = Blog.objects.order_by('-created_date')
+        tags = Tag.objects.order_by('-created_date')
+        
+        if search_key:
+            blogs = Blog.objects.filter(
+                Q(title__icontains=search_key) |
+                Q(category__title__icontains=search_key) |
+                Q(user__username__icontains=search_key) |
+                Q(tags__title__icontains=search_key)
+            ).distinct()
 
-        return render(request, 'search.html', context)
+            context = {
+                "blogs": blogs,
+                "recent_blogs": recent_blogs,
+                "tags": tags,
+                "search_key": search_key
+            }
 
-    else:
-        return redirect('home')
+            return render(request, 'search.html', context)
+
+        else:
+            return redirect('home')
+    except Exception as e:
+        db_logger.exception(e)
 
 
 @login_required(login_url='login')
 def my_blogs(request):
-    queryset = request.user.user_blogs.all()
-    page = request.GET.get('page', 1)
-    paginator = Paginator(queryset, 6)
-    delete = request.GET.get('delete', None)
-
-    if delete:
-        blog = get_object_or_404(Blog, pk=delete)
-        
-        if request.user.pk != blog.user.pk:
-            return redirect('home')
-
-        blog.delete()
-        messages.success(request, "Your blog has been deleted!")
-        return redirect('my_blogs')
-
     try:
-        blogs = paginator.page(page)
-    except EmptyPage:
-        blogs = paginator.page(1)
-    except PageNotAnInteger:
-        blogs = paginator.page(1)
-        return redirect('blogs')
+        queryset = request.user.user_blogs.all()
+        page = request.GET.get('page', 1)
+        paginator = Paginator(queryset, 6)
+        delete = request.GET.get('delete', None)
 
-    context = {
-        "blogs": blogs,
-        "paginator": paginator
-    }
-    
-    return render(request, 'my_blogs.html', context)
-    
-
-@login_required(login_url='login')
-def add_blog(request):
-    form = AddBlogForm()
-
-    if request.method == "POST":
-        form = AddBlogForm(request.POST, request.FILES)
-        if form.is_valid():
-            tags = request.POST['tags'].split(',')
-            user = get_object_or_404(User, pk=request.user.pk)
-            category = get_object_or_404(Category, pk=request.POST['category'])
-            blog = form.save(commit=False)
-            blog.user = user
-            blog.category = category
-            image = request.FILES['banner']
-            bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
-            img_path = os.getenv('AWS_STORAGE_BLOG_BANNERS_PATH')  # Kullanılan path'i güncelleyin
-
-            
-            s3 = boto3.client('s3',
-                            endpoint_url=os.getenv('AWS_S3_ENDPOINT_URL'),
-                            region_name=os.getenv('AWS_S3_REGION_NAME'),
-                            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-            s3.upload_fileobj(image, bucket_name, img_path + image.name, ExtraArgs={'ACL': 'public-read'})
-
-            # Blog resmi URL'si oluşturulması
-            blog_image_url = f"https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{image.name}"
-            blog.banner = blog_image_url
-            blog.save()
-
-            for tag in tags:
-                tag_input = Tag.objects.filter(
-                    title__iexact=tag.strip(),
-                    slug=slugify(tag.strip())
-                )
-                if tag_input.exists():
-                    t = tag_input.first()
-                    blog.tags.add(t)
-
-                else:
-                    if tag != '':
-                        new_tag = Tag.objects.create(
-                            title=tag.strip(),
-                            slug=slugify(tag.strip())
-                        )
-                        blog.tags.add(new_tag)
-
-            messages.success(request, "Blog added successfully")
-            return redirect('blog_details', slug=blog.slug)
-        else:
-            print(form.errors)
-
-    context = {
-        "form": form
-    }
-    return render(request, 'add_blog.html', context)
-
-
-@login_required(login_url='login')
-def update_blog(request, slug):
-    blog = get_object_or_404(Blog, slug=slug)
-    form = AddBlogForm(instance=blog)
-
-    if request.method == "POST":
-        form = AddBlogForm(request.POST, request.FILES, instance=blog)
-        
-        if form.is_valid():
+        if delete:
+            blog = get_object_or_404(Blog, pk=delete)
             
             if request.user.pk != blog.user.pk:
                 return redirect('home')
 
-            tags = request.POST['tags'].split(',')
-            user = get_object_or_404(User, pk=request.user.pk)
-            category = get_object_or_404(Category, pk=request.POST['category'])
-            blog = form.save(commit=False)
-            blog.user = user
-            blog.category = category
-            image = request.FILES['banner']
-            bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
-            img_path = os.getenv('AWS_STORAGE_BLOG_BANNERS_PATH')  # Kullanılan path'i güncelleyin
+            blog.delete()
+            messages.success(request, "Your blog has been deleted!")
+            return redirect('my_blogs')
 
+        try:
+            blogs = paginator.page(page)
+        except EmptyPage:
+            blogs = paginator.page(1)
+        except PageNotAnInteger:
+            blogs = paginator.page(1)
+            return redirect('blogs')
+
+        context = {
+            "blogs": blogs,
+            "paginator": paginator
+        }
+        
+        return render(request, 'my_blogs.html', context)
+    except Exception as e:
+        db_logger.exception(e)
+
+@login_required(login_url='login')
+def add_blog(request):
+    try:
+        form = AddBlogForm()
+
+        if request.method == "POST":
+            form = AddBlogForm(request.POST, request.FILES)
+            if form.is_valid():
+                tags = request.POST['tags'].split(',')
+                user = get_object_or_404(User, pk=request.user.pk)
+                category = get_object_or_404(Category, pk=request.POST['category'])
+                blog = form.save(commit=False)
+                blog.user = user
+                blog.category = category
+                image = request.FILES['banner']
+                bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
+                img_path = os.getenv('AWS_STORAGE_BLOG_BANNERS_PATH')  # Kullanılan path'i güncelleyin
+
+                
+                s3 = boto3.client('s3',
+                                endpoint_url=os.getenv('AWS_S3_ENDPOINT_URL'),
+                                region_name=os.getenv('AWS_S3_REGION_NAME'),
+                                aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                                aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+                s3.upload_fileobj(image, bucket_name, img_path + image.name, ExtraArgs={'ACL': 'public-read'})
+
+                # Blog resmi URL'si oluşturulması
+                blog_image_url = f"https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{image.name}"
+                blog.banner = blog_image_url
+                blog.save()
+
+                for tag in tags:
+                    tag_input = Tag.objects.filter(
+                        title__iexact=tag.strip(),
+                        slug=slugify(tag.strip())
+                    )
+                    if tag_input.exists():
+                        t = tag_input.first()
+                        blog.tags.add(t)
+
+                    else:
+                        if tag != '':
+                            new_tag = Tag.objects.create(
+                                title=tag.strip(),
+                                slug=slugify(tag.strip())
+                            )
+                            blog.tags.add(new_tag)
+
+                messages.success(request, "Blog added successfully")
+                return redirect('blog_details', slug=blog.slug)
+            else:
+                print(form.errors)
+
+        context = {
+            "form": form
+        }
+        return render(request, 'add_blog.html', context)
+    except Exception as e:
+        db_logger.exception(e)
+
+
+@login_required(login_url='login')
+def update_blog(request, slug):
+    try:
+        blog = get_object_or_404(Blog, slug=slug)
+        form = AddBlogForm(instance=blog)
+
+        if request.method == "POST":
+            form = AddBlogForm(request.POST, request.FILES, instance=blog)
             
-            s3 = boto3.client('s3',
-                            endpoint_url=os.getenv('AWS_S3_ENDPOINT_URL'),
-                            region_name=os.getenv('AWS_S3_REGION_NAME'),
-                            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-            s3.upload_fileobj(image, bucket_name, img_path  + image.name, ExtraArgs={'ACL': 'public-read'})
+            if form.is_valid():
+                
+                if request.user.pk != blog.user.pk:
+                    return redirect('home')
 
-            # Blog resmi URL'si oluşturulması
-            blog_image_url = f"https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{image.name}"
-            blog.banner = blog_image_url
-            blog.save()
+                tags = request.POST['tags'].split(',')
+                user = get_object_or_404(User, pk=request.user.pk)
+                category = get_object_or_404(Category, pk=request.POST['category'])
+                blog = form.save(commit=False)
+                blog.user = user
+                blog.category = category
+                image = request.FILES['banner']
+                bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
+                img_path = os.getenv('AWS_STORAGE_BLOG_BANNERS_PATH')  # Kullanılan path'i güncelleyin
 
+                
+                s3 = boto3.client('s3',
+                                endpoint_url=os.getenv('AWS_S3_ENDPOINT_URL'),
+                                region_name=os.getenv('AWS_S3_REGION_NAME'),
+                                aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                                aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+                s3.upload_fileobj(image, bucket_name, img_path  + image.name, ExtraArgs={'ACL': 'public-read'})
 
-            for tag in tags:
-                tag_input = Tag.objects.filter(
-                    title__iexact=tag.strip(),
-                    slug=slugify(tag.strip())
-                )
-                if tag_input.exists():
-                    t = tag_input.first()
-                    blog.tags.add(t)
-
-                else:
-                    if tag != '':
-                        new_tag = Tag.objects.create(
-                            title=tag.strip(),
-                            slug=slugify(tag.strip())
-                        )
-                        blog.tags.add(new_tag)
-
-            messages.success(request, "Blog updated successfully")
-            return redirect('blog_details', slug=blog.slug)
-        else:
-            print(form.errors)
+                # Blog resmi URL'si oluşturulması
+                blog_image_url = f"https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{image.name}"
+                blog.banner = blog_image_url
+                blog.save()
 
 
-    context = {
-        "form": form,
-        "blog": blog
-    }
-    return render(request, 'update_blog.html', context)
+                for tag in tags:
+                    tag_input = Tag.objects.filter(
+                        title__iexact=tag.strip(),
+                        slug=slugify(tag.strip())
+                    )
+                    if tag_input.exists():
+                        t = tag_input.first()
+                        blog.tags.add(t)
 
+                    else:
+                        if tag != '':
+                            new_tag = Tag.objects.create(
+                                title=tag.strip(),
+                                slug=slugify(tag.strip())
+                            )
+                            blog.tags.add(new_tag)
+
+                messages.success(request, "Blog updated successfully")
+                return redirect('blog_details', slug=blog.slug)
+            else:
+                print(form.errors)
+
+        context = {
+            "form": form,
+            "blog": blog
+        }
+        return render(request, 'update_blog.html', context)
+
+    except Exception as e:
+        db_logger.exception(e)
 
 def custom_404_view(request, exception):
     return render(request, 'errors/404.html', status=404)
