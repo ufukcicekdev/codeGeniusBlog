@@ -194,12 +194,12 @@ SESSION_TIMEOUT_REDIRECT = 'home'
 EDITORJS_EMBED_HOSTNAME_ALLOWED =("codegenius.blog","www.codegenius.blog")
 
 
-EDITORJS_IMAGE_UPLOAD_PATH = 'uploadi/'  # Yüklenen resimlerin kaydedileceği yol
+EDITORJS_IMAGE_UPLOAD_PATH = MEDIA_URL +'uploadi/'  # Yüklenen resimlerin kaydedileceği yol
 EDITORJS_IMAGE_BACKEND = 'storages.backends.s3boto3.S3Boto3Storage'  # Resimlerin depolandığı yer (örneğin S3)
 EDITORJS_IMAGE_FORMATS = ['jpeg', 'jpg', 'png', 'gif']  # Desteklenen resim formatları
 EDITORJS_IMAGE_MAX_SIZE = 5 * 1024 * 1024  # Maksimum resim boyutu (bayt cinsinden)
 EDITORJS_IMAGE_NAME_ORIGINAL = True  # Resimlerin orijinal adını kullan
-EDITORJS_FILE_UPLOAD_PATH = 'uploadf/'  # Yüklenen dosyaların kaydedileceği yol
+EDITORJS_FILE_UPLOAD_PATH = MEDIA_URL +  'uploadf/'  # Yüklenen dosyaların kaydedileceği yol
 EDITORJS_FILE_BACKEND = 'storages.backends.s3boto3.S3Boto3Storage'  # Dosyaların depolandığı yer (örneğin S3)
 EDITORJS_FILE_MAX_SIZE = 10 * 1024 * 1024  # Maksimum dosya boyutu (bayt cinsinden)
 EDITORJS_VIDEO_BACKEND = 'storages.backends.s3boto3.S3Boto3Storage'  # Videoların depolandığı yer (örneğin S3)
