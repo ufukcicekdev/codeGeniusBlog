@@ -36,7 +36,7 @@ db_logger = logging.getLogger('db')
 
 def home(request):
     try:
-        blogs = Blog.objects.order_by('-createddate')
+        blogs = Blog.objects.order_by('-created_date')
         tags = Tag.objects.order_by('-created_date')
         context = {
             "blogs": blogs,
