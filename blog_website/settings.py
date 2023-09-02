@@ -34,7 +34,7 @@ ALLOWED_HOSTS = ["codegenius.blog"]
 
 CSRF_TRUSTED_ORIGINS = ["https://*.codegenius.blog"]
 # Application definition
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
