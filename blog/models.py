@@ -69,7 +69,31 @@ class Blog(models.Model):
     )
     slug = models.SlugField(null=True, blank=True)
     banner = models.ImageField(upload_to='blog_banners',storage=MediaStorage())
-    description = EditorJsField()
+    description = EditorJsField(
+        editorjs_config={
+            "tools":{
+                "Link":{
+                    "config":{
+                        "endpoint":
+                            '/linkfetching/'
+                        }
+                },
+                "Image":{
+                    "config":{
+                        "endpoints":{
+                            "byFile":'uploadi/',
+                            #"byUrl":'uploadi/'
+                        }
+                    }
+                },
+                "Attaches":{
+                    "config":{
+                        "endpoint":'uploadf/'
+                    }
+                }
+            }
+        }
+    )
     created_date = models.DateField(auto_now_add=True)
 
     def __str__(self) -> str:

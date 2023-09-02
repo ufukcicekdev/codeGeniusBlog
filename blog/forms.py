@@ -8,7 +8,31 @@ class TextForm(forms.Form):
 
 
 class AddBlogForm(forms.ModelForm):
-    description = EditorJsField() # Rich text alanı olarak tanımla
+    description = EditorJsField(
+        editorjs_config={
+            "tools":{
+                "Link":{
+                    "config":{
+                        "endpoint":
+                            '/linkfetching/'
+                        }
+                },
+                "Image":{
+                    "config":{
+                        "endpoints":{
+                            "byFile":'uploadi/',
+                            #"byUrl":'uploadi/'
+                        }
+                    }
+                },
+                "Attaches":{
+                    "config":{
+                        "endpoint":'uploadf/'
+                    }
+                }
+            }
+        }
+    ) # Rich text alanı olarak tanımla
 
     class Meta:
         model = Blog

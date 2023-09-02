@@ -3,7 +3,6 @@ from django.views.generic import TemplateView
 from user_profile.views import login_user
 from django.conf.urls import handler404, handler500
 from .views import *
-from blog_website.ckeditor_views import editorjs_file_upload,editorjs_image_upload
 
 
 urlpatterns = [
@@ -17,9 +16,7 @@ urlpatterns = [
     path('user_notifications/', user_notifications, name='user_notifications'),
     path('mute_or_unmute_user/<int:user_id>/', mute_or_unmute_user, name='mute_or_unmute_user'),
     path('robots.txt',TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
-      
-    path('profile/uploadi/',    editorjs_image_upload, name='editorjs_image_upload'),
-    path('profile/uploadf/',    editorjs_file_upload, name='editorjs_file_upload'),
+
 ]
 
 handler404 = 'user_profile.views.custom_404_view'

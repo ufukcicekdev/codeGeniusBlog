@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponse
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.utils.text import slugify
 from celery import shared_task
@@ -14,6 +15,7 @@ import os
 import uuid
 import json
 import logging
+from django.views.decorators.csrf import csrf_exempt
 from dotenv import load_dotenv
 
 from user_profile.models import User
@@ -328,6 +330,7 @@ def add_blog(request):
         return render(request, 'add_blog.html', context)
     except Exception as e:
         db_logger.exception(e)
+
 
 
 @login_required(login_url='login')
