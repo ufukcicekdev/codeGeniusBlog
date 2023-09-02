@@ -122,14 +122,15 @@
         editor
           .save()
           .then(function (outputData) {
-            console.log(JSON.stringify(outputData));
+            console.log(JSON.stringify(outputData)); // Verileri konsola yaz
             input_el.value = JSON.stringify(outputData);
           })
           .catch(function (error) {
-            console.log("Saving failed: ", error);
+            console.log("Saving failed: ", error); // Hata durumlarını konsola yaz
           });
       },
     });
+    
   }
 
   window.addEventListener("load", function () {

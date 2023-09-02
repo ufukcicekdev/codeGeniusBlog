@@ -68,7 +68,7 @@ class UserProfileUpdateForm(forms.ModelForm):
                 "Image":{
                     "config":{
                         "endpoints":{
-                            "byFile":'/uploadi/',
+                            "byFile":'uploadi/',
                             #"byUrl":'uploadi/'
                         }
 

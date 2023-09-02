@@ -81,14 +81,14 @@ class Blog(models.Model):
                 "Image":{
                     "config":{
                         "endpoints":{
-                            "byFile":'/uploadi/',
+                            "byFile":'uploadi/',
                             #"byUrl":'uploadi/'
                         }
                     }
                 },
                 "Attaches":{
                     "config":{
-                        "endpoint":'/uploadf/'
+                        "endpoint":'uploadf/'
                     }
                 }
             }
