@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["codegenius.blog","*"]
+ALLOWED_HOSTS = ["codegenius.blog"]
 
 CSRF_TRUSTED_ORIGINS = ["https://*.codegenius.log"]
 # Application definition
