@@ -150,7 +150,7 @@ USE_TZ = True
 MEDIA_URL = 'https://ufukcicekdev.fra1.digitaloceanspaces.com/'
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR,"media")
+MEDIA_ROOT = MEDIA_URL  + 'media/'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
