@@ -80,9 +80,9 @@
                 </div>
                 <div class="col-md-8">
                     <form class="px-4" action="{% url 'profile' %}" method="POST">
+                        {% csrf_token %}
                         {{form.media}}
 
-                        {% csrf_token %}
                         {% if messages %}
                         <div class="form-group">
                             {% include 'message.html' %}
