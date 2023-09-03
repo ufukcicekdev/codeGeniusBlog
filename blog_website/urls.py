@@ -37,7 +37,7 @@ urlpatterns = [
     path('profile/uploadi/',    editorjs_image_upload, name='editorjs_image_upload'),
     path('profile/uploadf/',    editorjs_file_upload, name='editorjs_file_upload'),
 
-] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 

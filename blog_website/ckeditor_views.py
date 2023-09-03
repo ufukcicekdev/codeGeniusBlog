@@ -20,12 +20,19 @@ def editorjs_image_upload(request):
     try:
         if request.method == 'POST' and request.FILES.get('image'):
             f = request.FILES['image']
-            
-            file_content = f.read()
-    
-            if len(file_content) > 0:
-                # Dosyayı Spaces'e veya S3'e yükleyin
+            fs = FileSystemStorage()
+
+            # Dosyayı benzersiz bir isimle kaydetme
+            unique_filename = generate_unique_filename(f.name)
+            filename = fs.save(unique_filename, f)
+
+            # Dosyayı yerel depolamadan alın
+            file_name = os.path.join(settings.MEDIA_ROOT, unique_filename)
+            print("file_name",file_name)
+            with open(file_name, 'rb') as local_file:
                 session = boto3.session.Session()
+
+                # AWS istemci oluşturma
                 s3_client = session.client(
                     's3',
                     endpoint_url=os.getenv('AWS_S3_ENDPOINT_URL'),
@@ -36,12 +43,15 @@ def editorjs_image_upload(request):
 
                 bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
                 img_path = os.getenv('AWS_STORAGE_BLOG_CKEEDITOR_PATH')
-                cleaned_filename = str(f.name).strip()
+                cleaned_filename = str(filename).strip()
                 filename, ext = cleaned_filename.split('.')
 
                 try:
-                    s3_client.upload_fileobj(
-                        f,
+                    print("Dosyayı uzak depolamaya yükleme")
+                    print(file_name,
+                        bucket_name, img_path)
+                    s3_client.upload_file(
+                        file_name,
                         bucket_name,
                         img_path + filename + '.' + ext,
                         ExtraArgs={'ACL': 'public-read'}
@@ -49,24 +59,26 @@ def editorjs_image_upload(request):
                 except Exception as e:
                     return JsonResponse({'error': str(e)})
 
-                # Spaces'e yüklenen dosyanın URL'sini oluşturun
-                file_url = f'https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{filename}.{ext}'
+            # Dosyayı yerel depolamadan silme
+            os.remove(file_name)
 
-                # JSON yanıtı oluşturun
-                response_data = {
-                    'success': 1,
-                    'file': {
-                        'url': file_url,
-                        'name': f.name,
-                        'size': f.size,
-                    }
+            # Uzak depolama URL'sini oluşturma
+            file_url = f'https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{filename}.{ext}'
+
+            # JSON yanıtı oluşturma
+            response_data = {
+                'success': 1,
+                'file': {
+                    'url': file_url,
+                    'name': unique_filename,
+                    'size': f.size,
                 }
-                return JsonResponse({'success':1,'file':{'url':file_url}})
+            }
+            return JsonResponse({'success': 1, 'file': {'url': file_url}})
 
-        return JsonResponse({'error': 'Invalid request'})
     except Exception as e:
-        db_logger.exception(e)
-
+        return JsonResponse({'error': str(e)})
+    
 
 @csrf_exempt
 def editorjs_file_upload(request):
