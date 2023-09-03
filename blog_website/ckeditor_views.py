@@ -16,7 +16,7 @@ db_logger = logging.getLogger('db')
 
 
 @csrf_exempt
-def editorjs_image_upload(request,slug):
+def editorjs_image_upload(request):
     try:
         if request.method == 'POST' and request.FILES.get('image'):
             f = request.FILES['image']
