@@ -39,11 +39,11 @@ def editorjs_image_upload(request):
                 s3_client.upload_fileobj(
                     f,
                     bucket_name,
-                    img_path + str(filename) + '.' + ext,
+                    img_path + filename + '.' + ext,
                     ExtraArgs={'ACL': 'public-read'}
                 )
             except Exception as e:
-                return JsonResponse({'error': str(e)})
+                return JsonResponse({'error': str(e) + f + filename +file_url + cleaned_filename})
 
             # Spaces'e yüklenen dosyanın URL'sini oluşturun
             file_url = f'https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{filename}.{ext}'
