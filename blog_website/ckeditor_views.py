@@ -19,9 +19,8 @@ def editorjs_image_upload(request):
     try:
         if request.method == 'POST' and request.FILES.get('image'):
             f = request.FILES['image']
-            file_content = f.read()
     
-            if len(file_content) > 0:
+            if f.size > 0:  # Dosya boşsa yükleme işlemi yapma
                 # Dosyayı Spaces'e veya S3'e yükleyin
                 session = boto3.session.Session()
                 s3_client = session.client(
@@ -35,20 +34,20 @@ def editorjs_image_upload(request):
                 bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
                 img_path = os.getenv('AWS_STORAGE_BLOG_CKEEDITOR_PATH')
                 cleaned_filename = str(f.name).strip()
-                filename, ext = cleaned_filename.split('.')
+                filename, ext = os.path.splitext(cleaned_filename)
 
                 try:
                     s3_client.upload_fileobj(
                         f,
                         bucket_name,
-                        img_path + filename + '.' + ext,
+                        img_path + filename + ext,
                         ExtraArgs={'ACL': 'public-read'}
                     )
                 except Exception as e:
                     return JsonResponse({'error': str(e)})
 
                 # Spaces'e yüklenen dosyanın URL'sini oluşturun
-                file_url = f'https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{filename}.{ext}'
+                file_url = f'https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{filename}{ext}'
 
                 # JSON yanıtı oluşturun
                 response_data = {
@@ -59,11 +58,12 @@ def editorjs_image_upload(request):
                         'size': f.size,
                     }
                 }
-                return JsonResponse({'success':1,'file':{'url':file_url}})
+                return JsonResponse(response_data)
 
         return JsonResponse({'error': 'Invalid request'})
     except Exception as e:
         db_logger.exception(e)
+
 
 @csrf_exempt
 def editorjs_file_upload(request):
