@@ -48,6 +48,8 @@ def editorjs_image_upload(request):
 
                 try:
                     print("Dosyayı uzak depolamaya yükleme")
+                    print(file_name,
+                        bucket_name, img_path)
                     s3_client.upload_file(
                         file_name,
                         bucket_name,
