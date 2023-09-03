@@ -57,7 +57,7 @@ def editorjs_image_upload(request):
                     'size': f.size,
                 }
             }
-            return JsonResponse(response_data)
+            return JsonResponse({'success':1,'file':{'url':file_url}})
 
         return JsonResponse({'error': 'Invalid request'})
     except Exception as e:
@@ -106,7 +106,7 @@ def editorjs_file_upload(request):
                     'size': f.size,
                 }
             }
-            return JsonResponse(response_data)
+            return JsonResponse({'success':1,'file':{'url':file_url,'name':str(f.name),'size':f.size}})
 
         return JsonResponse({'error': 'Invalid request'})
     except Exception as e:

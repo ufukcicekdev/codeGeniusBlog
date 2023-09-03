@@ -54,7 +54,7 @@ def upload_blog_image(request,slug):
                     'size': f.size,
                 }
             }
-            return JsonResponse(response_data)
+            return JsonResponse({'success':1,'file':{'url':file_url}})
 
         return JsonResponse({'error': 'Invalid request'})
     except Exception as e:
@@ -103,7 +103,7 @@ def upload_blog_file(request,slug):
                     'size': f.size,
                 }
             }
-            return JsonResponse(response_data)
+            return JsonResponse({'success':1,'file':{'url':file_url,'name':str(f.name),'size':f.size}})
 
         return JsonResponse({'error': 'Invalid request'})
     except Exception as e:
