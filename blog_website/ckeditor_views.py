@@ -39,7 +39,7 @@ def editorjs_image_upload(request):
                 s3_client.upload_fileobj(
                     f,
                     bucket_name,
-                    img_path + filename + '.' + ext,
+                    img_path + str(filename) + '.' + ext,
                     ExtraArgs={'ACL': 'public-read'}
                 )
             except Exception as e:
