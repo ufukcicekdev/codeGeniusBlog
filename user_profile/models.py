@@ -25,7 +25,34 @@ class User(AbstractUser):
     followers = models.ManyToManyField("Follow")
     linkedIn_url = models.URLField()
     github_url = models.URLField()
-    bio = EditorJsField()
+    bio = EditorJsField(
+        editorjs_config={
+            "tools":{
+                "Link":{
+                    "config":{
+                        "endpoint":
+                            '/linkfetching/'
+                        }
+                },
+                "Image":{
+                    "config":{
+                        "endpoints":{
+                            "byFile":'uploadi/',
+                            "byUrl":'uploadi/'
+                        },
+                        "additionalRequestHeaders": [{
+                            "Content-Type": "multipart/form-data",      
+                        }]
+                    }
+                },
+                "Attaches":{
+                    "config":{
+                        "endpoint":'uploadf/'
+                    }
+                }
+            }
+        }
+    )
     REQUIRED_FIELDS = ["email"]
     objects = CustomUserManager()
 

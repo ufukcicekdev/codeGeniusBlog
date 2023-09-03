@@ -82,8 +82,11 @@ class Blog(models.Model):
                     "config":{
                         "endpoints":{
                             "byFile":'uploadi/',
-                            #"byUrl":'uploadi/'
-                        }
+                            "byUrl":'uploadi/'
+                        },
+                        "additionalRequestHeaders": [{
+                            "Content-Type": "multipart/form-data",      
+                        }]
                     }
                 },
                 "Attaches":{
