@@ -5,9 +5,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import ensure_csrf_cookie, requires_csrf_token, csrf_exempt
 import logging
+from django.conf import settings
 from django_editorjs.fields import EditorJsField
 from dotenv import load_dotenv
-
+import uuid
 
 load_dotenv()
 
@@ -19,10 +20,19 @@ def editorjs_image_upload(request):
     try:
         if request.method == 'POST' and request.FILES.get('image'):
             f = request.FILES['image']
-    
-            if f.size > 0:  # Dosya boşsa yükleme işlemi yapma
-                # Dosyayı Spaces'e veya S3'e yükleyin
+            fs = FileSystemStorage()
+
+            # Dosyayı benzersiz bir isimle kaydetme
+            unique_filename = generate_unique_filename(f.name)
+            filename = fs.save(unique_filename, f)
+            
+            # Dosyayı yerel depolamadan alın
+            file_name = os.path.join(settings.MEDIA_ROOT, unique_filename)
+
+            with open(file_name, 'rb') as local_file:
                 session = boto3.session.Session()
+                print(filename,"filename")
+                # AWS istemci oluşturma
                 s3_client = session.client(
                     's3',
                     endpoint_url=os.getenv('AWS_S3_ENDPOINT_URL'),
@@ -33,37 +43,39 @@ def editorjs_image_upload(request):
 
                 bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
                 img_path = os.getenv('AWS_STORAGE_BLOG_CKEEDITOR_PATH')
-                cleaned_filename = str(f.name).strip()
-                filename, ext = os.path.splitext(cleaned_filename)
-
+                cleaned_filename = str(filename).strip()
+                filename, ext = cleaned_filename.split('.')
+                print("ufukcicekdev",filename)
                 try:
+                    # Dosyayı uzak depolamaya yükleme
                     s3_client.upload_fileobj(
-                        f,
+                        local_file,
                         bucket_name,
-                        img_path + filename + ext,
+                        img_path + filename + '.' + ext,
                         ExtraArgs={'ACL': 'public-read'}
                     )
                 except Exception as e:
                     return JsonResponse({'error': str(e)})
 
-                # Spaces'e yüklenen dosyanın URL'sini oluşturun
-                file_url = f'https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{filename}{ext}'
+            # Dosyayı yerel depolamadan silme
 
-                # JSON yanıtı oluşturun
-                response_data = {
-                    'success': 1,
-                    'file': {
-                        'url': file_url,
-                        'name': f.name,
-                        'size': f.size,
-                    }
+            # Uzak depolama URL'sini oluşturma
+            file_url = f'https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{filename}.{ext}'
+
+            # JSON yanıtı oluşturma
+            response_data = {
+                'success': 1,
+                'file': {
+                    'url': file_url,
+                    'name': unique_filename,
+                    'size': f.size,
                 }
-                return JsonResponse(response_data)
+            }
+            os.remove(file_name)
+            return JsonResponse({'success':1,'file':{'url':file_url}})
 
-        return JsonResponse({'error': 'Invalid request'})
     except Exception as e:
-        db_logger.exception(e)
-
+        return JsonResponse({'error': str(e)})
 
 @csrf_exempt
 def editorjs_file_upload(request):
@@ -113,3 +125,10 @@ def editorjs_file_upload(request):
         return JsonResponse({'error': 'Invalid request'})
     except Exception as e:
         db_logger.exception(e)
+
+
+
+def generate_unique_filename(filename):
+    ext = filename.split('.')[-1]
+    unique_filename = f"{uuid.uuid4().hex}.{ext}"
+    return unique_filename
