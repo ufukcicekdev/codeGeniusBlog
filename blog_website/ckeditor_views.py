@@ -43,7 +43,7 @@ def editorjs_image_upload(request):
                     ExtraArgs={'ACL': 'public-read'}
                 )
             except Exception as e:
-                return JsonResponse({'error': str(e) + f + filename +file_url + cleaned_filename})
+                return JsonResponse({'error': str(e) + f + filename  + cleaned_filename})
 
             # Spaces'e yüklenen dosyanın URL'sini oluşturun
             file_url = f'https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{filename}.{ext}'
