@@ -18,50 +18,12 @@ db_logger = logging.getLogger('db')
 def editorjs_image_upload(request):
     try:
         if request.method == 'POST' and request.FILES.get('image'):
-            f = request.FILES['image']
-            file_content = f.read()
-    
-            if len(file_content) > 0:
-                # Dosyayı Spaces'e veya S3'e yükleyin
-                session = boto3.session.Session()
-                s3_client = session.client(
-                    's3',
-                    endpoint_url=os.getenv('AWS_S3_ENDPOINT_URL'),
-                    region_name=os.getenv('AWS_S3_REGION_NAME'),
-                    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-                )
-
-                bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME')
-                img_path = os.getenv('AWS_STORAGE_BLOG_CKEEDITOR_PATH')
-                cleaned_filename = str(f.name).strip()
-                filename, ext = cleaned_filename.split('.')
-
-                try:
-                    s3_client.upload_fileobj(
-                        f,
-                        bucket_name,
-                        img_path + filename + '.' + ext,
-                        ExtraArgs={'ACL': 'public-read'}
-                    )
-                except Exception as e:
-                    return JsonResponse({'error': str(e)})
-
-                # Spaces'e yüklenen dosyanın URL'sini oluşturun
-                file_url = f'https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{filename}.{ext}'
-
-                # JSON yanıtı oluşturun
-                response_data = {
-                    'success': 1,
-                    'file': {
-                        'url': file_url,
-                        'name': f.name,
-                        'size': f.size,
-                    }
-                }
-                return JsonResponse({'success':1,'file':{'url':file_url}})
-
-        return JsonResponse({'error': 'Invalid request'})
+            f=request.FILES['image']
+            fs=FileSystemStorage()
+            filename=str(f).split('.')[0]
+            file= fs.save(filename,f)
+            fileurl=fs.url(file)
+            return JsonResponse({'success':1,'file':{'url':fileurl}})
     except Exception as e:
         db_logger.exception(e)
 
