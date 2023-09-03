@@ -25,13 +25,13 @@ def editorjs_image_upload(request):
             # Dosyayı benzersiz bir isimle kaydetme
             unique_filename = generate_unique_filename(f.name)
             filename = fs.save(unique_filename, f)
-            
+
             # Dosyayı yerel depolamadan alın
             file_name = os.path.join(settings.MEDIA_ROOT, unique_filename)
 
             with open(file_name, 'rb') as local_file:
                 session = boto3.session.Session()
-                print(filename,"filename")
+
                 # AWS istemci oluşturma
                 s3_client = session.client(
                     's3',
@@ -45,19 +45,20 @@ def editorjs_image_upload(request):
                 img_path = os.getenv('AWS_STORAGE_BLOG_CKEEDITOR_PATH')
                 cleaned_filename = str(filename).strip()
                 filename, ext = cleaned_filename.split('.')
-                print("ufukcicekdev",filename)
+
                 try:
-                    # Dosyayı uzak depolamaya yükleme
-                    s3_client.upload_fileobj(
-                        local_file,
+                    print("Dosyayı uzak depolamaya yükleme")
+                    s3_client.upload_file(
+                        file_name,
                         bucket_name,
                         img_path + filename + '.' + ext,
                         ExtraArgs={'ACL': 'public-read'}
                     )
                 except Exception as e:
                     return JsonResponse({'error': str(e)})
-                print("1")
+
             # Dosyayı yerel depolamadan silme
+            os.remove(file_name)
 
             # Uzak depolama URL'sini oluşturma
             file_url = f'https://{bucket_name}.fra1.digitaloceanspaces.com/{img_path}{filename}.{ext}'
@@ -71,11 +72,11 @@ def editorjs_image_upload(request):
                     'size': f.size,
                 }
             }
-            os.remove(file_name)
-            return JsonResponse({'success':1,'file':{'url':file_url}})
+            return JsonResponse({'success': 1, 'file': {'url': file_url}})
 
     except Exception as e:
         return JsonResponse({'error': str(e)})
+    
 
 @csrf_exempt
 def editorjs_file_upload(request):
