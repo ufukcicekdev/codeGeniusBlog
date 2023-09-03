@@ -56,7 +56,7 @@ def editorjs_image_upload(request):
                     )
                 except Exception as e:
                     return JsonResponse({'error': str(e)})
-
+                print("1")
             # Dosyayı yerel depolamadan silme
 
             # Uzak depolama URL'sini oluşturma
