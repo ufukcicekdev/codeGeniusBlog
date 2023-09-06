@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 #test ortamı
 # ALLOWED_HOSTS = ["codegenius.blog","*"]
@@ -45,7 +45,7 @@ DEBUG = True
 
 ###Canlı Ortam 
 
-ALLOWED_HOSTS = ["codegenius.blog"]
+ALLOWED_HOSTS = ["codegenius.blog","www.codegenius.blog"]
 CSRF_TRUSTED_ORIGINS = ["https://*.codegenius.blog"]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
